@@ -280,6 +280,12 @@ window.marcarRep = function(exId, i) {
   renderizarExercicios();
 };
 
+  window.desmarcarTodos = function() {
+    Object.keys(estadoCheckboxes).forEach(k => estadoCheckboxes[k]=false);
+    salvarEstadoCheckboxes();
+    renderizarExercicios();
+  };
+
 setTimeout(() => {
   const btn = document.querySelector('.btn-warning[onclick*="desmarcarTodos"]');
   if (btn) {
