@@ -250,7 +250,19 @@ document.getElementById('btnCheckin').addEventListener('click', async function()
       document.getElementById('btnCheckin').disabled = false;
     }
   });
-  
+
+// Função global para expandir/recolher treino/letra
+window.toggleTreino = function(letra) {
+  treinoExpandido[letra] = !treinoExpandido[letra];
+  renderizarExercicios();
+};
+
+// Função global para expandir/recolher detalhes do exercício
+window.toggleExercicio = function(id) {
+  exercicioExpandido[id] = !exercicioExpandido[id];
+  renderizarExercicios();
+};
+
   window.toggleVideo = function(exId, btn) {
     const box = document.getElementById(`videoBox_${exId}`);
     const iframe = box.querySelector('iframe');
