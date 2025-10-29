@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastrar Treino do Aluno</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+</head>
+<body>
+  <div class="container p-4">
+    <h2 class="mb-4">Cadastrar Treino para Aluno</h2>
+    <div id="cadastroTreinoError" class="text-danger mb-3"></div>
+    <div id="alunoInfo" class="mb-3"></div>
+
+    <form id="formTipoTreino" class="mb-4">
+      <p><strong>Tipo de treino:</strong></p>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipoTreino" id="treinoPronto" value="pronto" checked>
+        <label class="form-check-label" for="treinoPronto">Treino Pronto</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipoTreino" id="treinoPersonalizado" value="personalizado">
+        <label class="form-check-label" for="treinoPersonalizado">Treino Personalizado</label>
+      </div>      
+    </form>
+
+    <div id="areaTreinoPronto" class="mb-4">
+      <label for="selectTreinoPronto" class="form-label">Escolha um treino pronto:</label>
+      <select id="selectTreinoPronto" class="form-select"></select>
+    </div>
+    
+    <!-- Aqui só fica a área dinâmica do treino personalizado -->
+    <div id="areaPersonalizado" class="mb-4" style="display:none;">
+      <div id="listarTreinosLetras"></div>
+      <button type="button" id="btnAdicionarLetra" class="btn btn-secondary btn-sm mt-2">Adicionar Treino (A, B, ...)</button>
+      <!-- NÃO coloque nenhum form fixo de exercício/séries/repetições aqui! -->
+    </div>
+
+    <div class="mb-3">
+        <label for="dataValidadeTreino" class="form-label">Data de validade do treino:</label>
+        <input type="date" id="dataValidadeTreino" class="form-control">
+      </div>
+      
+    
+    <button type="button" id="btnSalvarTreino" class="btn btn-primary">Salvar Treino para Aluno</button>
+    <a href="aluno-detalhes.html" id="voltarAluno" class="btn btn-secondary ms-2">Voltar</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/aluno-treino.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

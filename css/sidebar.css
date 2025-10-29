@@ -1,0 +1,31 @@
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #f7f7fa;
+  }
+  
+  .sidebar-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #222;
+  }
+  
+  .sidebar .list-group-item {
+    border: none;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+  }
+  
+  .sidebar .list-group-item a {
+    color: #212529;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .sidebar .list-group-item a:hover,
+  .sidebar .list-group-item.active a {
+    background: #e2e2ea;
+    border-radius: 8px;
+    color: #007bff;
+  }
+  

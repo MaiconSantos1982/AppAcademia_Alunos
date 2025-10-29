@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Aluno</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+</head>
+<body>
+  <div class="container p-4">
+    <h2 class="mb-4">Detalhes do Aluno</h2>
+    <div id="alunoError" class="text-danger my-2"></div>
+    <div id="detalhesAluno"></div>
+    <div id="areaTreinoAluno"></div>
+    <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-success" onclick="abrirCadastroTreino()">Cadastrar Treino</button>
+      <a href="alunos.html" class="btn btn-secondary">Voltar</a>
+    </div>
+    <div id="alunoError" class="text-danger mt-3"></div>
+    <!-- Modal edição -->
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+      <div class="modal-dialog">
+        <form class="modal-content" id="formEditarAluno">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Dados do Aluno</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="alunoIdEditar">
+            <input type="text" class="form-control mb-2" id="nomeEditar" placeholder="Nome" required>
+            <input type="email" class="form-control mb-2" id="emailEditar" placeholder="E-mail" required>
+            <input type="text" class="form-control mb-2" id="telefoneEditar" placeholder="Telefone">
+            <input type="number" class="form-control mb-2" id="pesoEditar" placeholder="Peso (kg)">
+            <input type="number" class="form-control mb-2" id="alturaEditar" placeholder="Altura (m)">
+            <input type="text" class="form-control mb-2" id="problemasEditar" placeholder="Problemas de saúde">
+            <input type="text" class="form-control mb-2" id="obsEditar" placeholder="Observações">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- SCRIPTS - só referências, nada inline -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/aluno-detalhes.js"></script>
+</body>
+</html>

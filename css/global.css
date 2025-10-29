@@ -1,0 +1,161 @@
+body {
+    background: #f9f9f9;
+    color: #222;
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  }
+  
+  h2, h1, h3, h4, h5 {
+    font-family: 'Inter', 'Arial', sans-serif;
+  }
+  
+  .btn {
+    border-radius: 8px;
+    font-weight: 500;
+  }
+  
+  .table {
+    font-size: 1rem;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 8px;
+  }
+  
+  .card {
+    border-radius: 12px;
+  }
+  
+  .modal-content {
+    border-radius: 12px;
+  }
+  
+  .alert {
+    border-radius: 8px;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button {
+    opacity: 0.8;
+  }
+  
+  input::placeholder {
+    color: #888;
+  }
+  
+  div.text-danger, .alert-danger {
+    color: #e63946!important;
+  }
+  
+  div.text-success, .alert-success {
+    color: #198754!important;
+  }
+
+  .ios-input { font-size: 1.15rem; padding: .65rem .5rem; border: 1px solid #eee; background: #F7F7FA;}
+.card { box-shadow: 0 3px 18px #ffffff;}
+.linha-concluida {
+    background: #F7F7F7 !important;
+    text-decoration: line-through;
+    color: #aaa;
+    border-bottom: 4px solid #D1D1D1 !important;
+  }
+  .linha-concluida td { border-bottom: 4px solid #D1D1D1; }
+  .btn-concluir {
+    background: #FFD85E;
+    border: none;
+    font-size: 1.2rem;
+    width: 38px; height: 38px;
+    border-radius: 16px;
+    padding:0;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .3s, color .3s;
+    outline:none;
+  }
+  .btn-concluir.concluido {
+    background: #54D972 !important;
+  }
+  .ios-input { font-size: 1.2rem; padding: .8rem .5rem; border: 1px solid #eee; background: #F3F3F6;}
+  .card { box-shadow: 0 3px 18px #E7E7ED;}
+  /* check-in button sempre logo acima do cronômetro, mas não fixed */
+  #btnCheckin { position:static; margin-bottom:95px;}
+  .fixed-bottom {
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 -1px 10px #eee;
+  }
+  #btnCheckin {
+    position: static;
+  }
+  
+  .linha-rep {
+    position: relative;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .rep-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: none !important;
+    gap: 8px;
+    width: fit-content;
+    margin: 0 auto; /* Centraliza dentro da td se precisar */
+  }
+  .linha-concluida .rep-tachado-content,
+  .linha-concluida input {
+    color: #aaa !important;
+  }
+  .linha-tachado-overlay {
+    position: absolute;
+    left: 0;
+    width: calc(100% - 8px); /* gap do .rep-wrapper */
+    top: 55%; height: 4px;
+    background: #bbb;
+    opacity: .7;
+    transform: translateY(-50%);
+    pointer-events: none;
+    border-radius: 6px;
+    z-index: 2;
+  }
+  .linha-concluida {
+    background: #F7F7F7 !important;
+    text-decoration: none;
+    border: none !important;
+  }
+  .linha-rep td {
+    border: none !important;
+    box-shadow: none !important;
+    vertical-align: middle !important;
+  }
+  .btn-concluir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+  }
+  .text-end { text-align: right!important; }
+  .text-center { text-align: center!important; }
+  .text-start { text-align: left!important; }
+  th.text-center,
+  td.text-center { vertical-align: middle !important; }
+  
+  /* Remove borda/resto da bootstrap-table horizontal! */
+  .table, .table-borderless, .table-bordered, .table-striped, .table thead, .table tbody, .table tr, .table td, .table th {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  hr { display:none !important; }
+
+  .video-box {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s cubic-bezier(.4,0,.2,1);
+  }
+  .video-box:not(.collapse) {
+    max-height: 420px;
+    transition: max-height .5s cubic-bezier(.4,0,.2,1);
+  }
+  .video-box .ratio { border-radius: 13px; }
+  
+  
