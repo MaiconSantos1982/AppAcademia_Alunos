@@ -161,4 +161,5 @@ body {
   }
   .video-box .ratio { border-radius: 13px; }
   
-  
+  .btn-warning { pointer-events: auto !important; }
+
