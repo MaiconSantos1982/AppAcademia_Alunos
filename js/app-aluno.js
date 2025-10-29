@@ -91,7 +91,7 @@ async function renderizarExercicios() {
     console.log("Grupos encontrados:", grupos);
 
     const area = document.getElementById('areaTreino');
-    let html = `<button class="btn btn-warning w-100 mb-4 fw-bold rounded-3 shadow-sm" style="font-size:1.12rem;" onclick="desmarcarTodos()">Desmarcar todos</button>`;
+    let html = `<button type="button" class="btn btn-warning w-100 mb-4 fw-bold rounded-3 shadow-sm" style="font-size:1.12rem;" onclick="desmarcarTodos()">Desmarcar todos</button>`;
     html += await Promise.all(Object.entries(grupos).map(async ([letra, lista]) => {
       const treinoOpen = treinoExpandido[letra] ?? true;
       return `
