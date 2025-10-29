@@ -73,6 +73,7 @@ function salvarEstadoCheckboxes() {
 }
 
 async function renderizarExercicios() {
+  console.log("TreinoExercicios para renderizar:", treinoExercicios);
   // Salva estado dos inputs de carga antes de re-render
   const valoresCarga = {};
   document.querySelectorAll('input[id^="input_carga_"]').forEach(input => {
@@ -214,7 +215,7 @@ window.abrirVideo = function(url) {
   document.getElementById('modalVideo').addEventListener('hidden.bs.modal', function () {
     document.getElementById('iframeVideo').src = '';
   });
-  
+  console.log("HTML gerado do treino:", area.innerHTML);
 
 async function getNomeGrupoTipoExercicio(e) {
   if (e.exercicio_tipo === 'geral') {
