@@ -22,23 +22,30 @@ async function carregarAluno() {
 }
 
 async function carregarTreinoAtivo() {
-  const { data } = await supabase
-  .from('alunos_treinos')
-  .select('*')
-  .eq('aluno_id', alunoId)
-  .eq('ativo', true)
-  .order('created_at', { ascending: false })
-  .limit(1)
-  .single();
-  treinoAtivo = data;
-  if (!treinoAtivo) {
+  const { data, error } = await supabase
+    .from('alunos_treinos')
+    .select('*')
+    .eq('aluno_id', alunoId)
+    .eq('ativo', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  console.log('Treino:', data, 'Erro:', error);
+
+  if (error) {
+    document.getElementById('areaTreino').innerHTML = `<div class="alert alert-danger">Erro: ${error.message}</div>`;
+    return;
+  }
+  if (!data) {
     document.getElementById('areaTreino').innerHTML = `<div class="alert alert-warning">Nenhum treino encontrado.</div>`;
     return;
   }
   let titulo = '';
-  if (treinoAtivo.tipo_treino === 'personalizado') titulo = treinoAtivo.nome_personalizado;
+  if (data.tipo_treino === 'personalizado') titulo = data.nome_personalizado;
   else titulo = 'Treino pronto';
   document.getElementById('tituloTreino').textContent = titulo;
+  treinoAtivo = data;
   await carregarTreinoExercicios();
 }
 
