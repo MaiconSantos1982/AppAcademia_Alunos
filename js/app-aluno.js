@@ -50,12 +50,14 @@ async function carregarTreinoAtivo() {
 }
 
 async function carregarTreinoExercicios() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('alunos_treinos_exercicios')
     .select('*')
     .eq('aluno_treino_id', treinoAtivo.id)
     .order('treino_letra')
     .order('ordem');
+  console.log('Exercícios:', data, 'Erro:', error);
+
   treinoExercicios = data || [];
   carregarEstadoCheckboxes();
   await renderizarExercicios();
