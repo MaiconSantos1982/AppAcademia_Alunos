@@ -214,8 +214,8 @@ window.abrirVideo = function(url) {
   // Limpa o src ao fechar o modal para liberar o player
   document.getElementById('modalVideo').addEventListener('hidden.bs.modal', function () {
     document.getElementById('iframeVideo').src = '';
-  });
   console.log("HTML gerado do treino:", area.innerHTML);
+  });
 
 async function getNomeGrupoTipoExercicio(e) {
   if (e.exercicio_tipo === 'geral') {
