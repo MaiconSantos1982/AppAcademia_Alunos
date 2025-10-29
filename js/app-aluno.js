@@ -279,3 +279,17 @@ window.marcarRep = function(exId, i) {
   salvarEstadoCheckboxes();
   renderizarExercicios();
 };
+
+setTimeout(() => {
+  const btn = document.querySelector('.btn-warning[onclick*="desmarcarTodos"]');
+  if (btn) {
+    btn.addEventListener('touchstart', function(e) {
+      e.preventDefault(); // evita clique fantasma
+      window.desmarcarTodos();
+    });
+    // (opcional redundância) também reforça o click
+    btn.addEventListener('click', function(e) {
+      window.desmarcarTodos();
+    });
+  }
+}, 150);
