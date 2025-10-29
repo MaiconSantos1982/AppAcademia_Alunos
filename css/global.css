@@ -71,7 +71,7 @@ body {
   }
   .btn-concluir.concluido {
     background: #54D972 !important;
-  }
+}
   .ios-input { font-size: 1.2rem; padding: .8rem .5rem; border: 1px solid #eee; background: #F3F3F6;}
   .card { box-shadow: 0 3px 18px #E7E7ED;}
   /* check-in button sempre logo acima do cronômetro, mas não fixed */
