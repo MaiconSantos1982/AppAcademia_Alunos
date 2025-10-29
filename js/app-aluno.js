@@ -23,13 +23,13 @@ async function carregarAluno() {
 
 async function carregarTreinoAtivo() {
   const { data } = await supabase
-    .from('alunos_treinos')
-    .select('*')
-    .eq('aluno_id', alunoId)
-    .eq('ativo', true)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+  .from('alunos_treinos')
+  .select('*')
+  .eq('aluno_id', alunoId)
+  .eq('ativo', true)
+  .order('created_at', { ascending: false })
+  .limit(1)
+  .single();
   treinoAtivo = data;
   if (!treinoAtivo) {
     document.getElementById('areaTreino').innerHTML = `<div class="alert alert-warning">Nenhum treino encontrado.</div>`;
