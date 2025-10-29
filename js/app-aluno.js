@@ -273,3 +273,9 @@ window.toggleExercicio = function(id) {
   renderizarExercicios();
 };
 
+window.marcarRep = function(exId, i) {
+  const cbId = `${exId}_rep${i}`;
+  estadoCheckboxes[cbId] = !estadoCheckboxes[cbId];
+  salvarEstadoCheckboxes();
+  renderizarExercicios();
+};
