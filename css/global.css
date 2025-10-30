@@ -141,6 +141,7 @@ th.text-center, td.text-center {
   z-index: 2;
 }
 
+/* Exercício completo */
 .exercicio-completo {
   color: #aaa !important;
   text-decoration: line-through;
