@@ -209,28 +209,15 @@ async function renderizarExercicios() {
 }
 
 async function getNomeGrupoTipoExercicio(e) {
-  if (e.exercicio_tipo?.toLowerCase() === 'geral') {
-    const { data, error } = await supabase
-      .from('exercicios_geral')
-      .select('nome,grupo_muscular,video_url')
-      .eq('id', e.exercicio_id)
-      .single();
-    
-    if (error) console.error('Erro ao buscar exercício geral:', error);
-    return [data?.nome || '-', data?.grupo_muscular || '-', data?.video_url || null];
-    
-  } else if (e.exercicio_tipo?.toLowerCase() === 'academia') {
-    const { data, error } = await supabase
-      .from('exercicios_academia')
-      .select('nome,grupo_muscular,video_url')
-      .eq('id', e.exercicio_id)
-      .single();
-    
-    if (error) console.error('Erro ao buscar exercício academia:', error);
-    return [data?.nome || '-', data?.grupo_muscular || '-', data?.video_url || null];
-  }
+  const { data, error } = await supabase
+    .from('exercicios_geral')
+    .select('nome,grupo_muscular,video_url')
+    .eq('id', e.exercicio_id)
+    .limit(1);
   
-  return ['-', '-', null];
+  if (error) console.error('Erro ao buscar exercício:', error);
+  const exercicio = data && data.length > 0 ? data[0] : null;
+  return [exercicio?.nome || '-', exercicio?.grupo_muscular || '-', exercicio?.video_url || null];
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
