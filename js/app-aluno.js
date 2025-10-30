@@ -3,8 +3,8 @@ let treinoAtivo = null;
 let treinoExercicios = [];
 let alunoId = null;
 let estadoCheckboxes = {};
-let treinoExpandido = {}; // guarda quais treinos abertos
-let exercicioExpandido = {}; // guarda quais exercícios detalhados abertos
+let treinoExpandido = {};
+let exercicioExpandido = {};
 
 function getAlunoIdFromUrl() {
   const p = new URLSearchParams(location.search);
@@ -67,6 +67,7 @@ function carregarEstadoCheckboxes() {
   const key = 'concluido_' + treinoAtivo.id;
   estadoCheckboxes = JSON.parse(localStorage.getItem(key) || '{}');
 }
+
 function salvarEstadoCheckboxes() {
   const key = 'concluido_' + treinoAtivo.id;
   localStorage.setItem(key, JSON.stringify(estadoCheckboxes));
@@ -81,7 +82,6 @@ async function renderizarExercicios() {
       valoresCarga[input.id] = input.value;
     });
 
-    // Agrupa por treino_letra. Se não existe, logue já aqui!
     const grupos = {};
     for (const t of treinoExercicios) {
       if (!t.treino_letra) console.warn("Exercício sem treino_letra:", t);
@@ -117,21 +117,28 @@ async function renderizarExercicios() {
                 <span class="fw-bold" style="font-size:1.1rem;">${nome}</span>
                 <span class="ms-2" style="color:#888;font-weight:400;">
                   | ${grupo} | Séries: ${repsArr.length}
-                  ${video_url ? `
-                  <button class="btn btn-link p-0 ms-2" data-url="${video_url}" onclick="toggleVideo('${ex.id}', this)">
-                    <svg width="22" height="22" fill="#555" viewBox="0 0 16 16"><path ... /></svg>
-                  </button>
-                  <div id="videoBox_${ex.id}" class="video-box collapse my-2">
-                    <div class="ratio ratio-16x9 rounded-3 overflow-hidden">
-                      <iframe src="" allowfullscreen frameborder="0"></iframe>
-                    </div>
-                  </div>
-                  ` : ''}
                 </span>
+                ${video_url ? `
+                  <button class="btn btn-link p-0 ms-2" onclick="event.stopPropagation(); toggleVideo('${ex.id}', '${video_url}');" style="text-decoration:none;">
+                    <svg width="24" height="24" fill="#FF6B6B" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" fill="#FF6B6B"/>
+                      <path d="M10 8l6 4-6 4V8z" fill="#FFF"/>
+                    </svg>
+                  </button>
+                ` : ''}
                 <span style="font-weight:300;font-size:1.2em;margin-left:auto;">
                   <i class="bi ${exercOpen ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
                 </span>
               </div>
+              
+              ${video_url ? `
+                <div id="videoBox_${ex.id}" class="video-container" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
+                  <div class="ratio ratio-16x9 my-2 mx-3" style="border-radius:12px;overflow:hidden;">
+                    <iframe id="iframe_${ex.id}" src="" allowfullscreen frameborder="0" allow="autoplay"></iframe>
+                  </div>
+                </div>
+              ` : ''}
+              
               <div class="${exercOpen ? '' : 'd-none'} px-3 pb-1 pt-2">
                 <div class="table-responsive">
                   <table class="table table-borderless align-middle mb-0">
@@ -190,9 +197,8 @@ async function renderizarExercicios() {
   }
 }
 
-
 async function getNomeGrupoTipoExercicio(e) {
-  if (e.exercicio_tipo === 'geral') {
+  if (e.exercicio_tipo?.toLowerCase() === 'geral') {
     const { data, error } = await supabase
       .from('exercicios_geral')
       .select('nome,grupo_muscular,video_url')
@@ -202,7 +208,7 @@ async function getNomeGrupoTipoExercicio(e) {
     if (error) console.error('Erro ao buscar exercício geral:', error);
     return [data?.nome || '-', data?.grupo_muscular || '-', data?.video_url || null];
     
-  } else if (e.exercicio_tipo === 'academia') {
+  } else if (e.exercicio_tipo?.toLowerCase() === 'academia') {
     const { data, error } = await supabase
       .from('exercicios_academia')
       .select('nome,grupo_muscular,video_url')
@@ -222,6 +228,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   await carregarAluno();
   await carregarTreinoAtivo();
 });
+
 let timerInterval = null;
 let timerSeconds = 0;
 
@@ -247,41 +254,65 @@ function atualizarCronometro() {
 }
 
 document.getElementById('btnCheckin').addEventListener('click', async function() {
-    if (!alunoId || !treinoAtivo?.academia_id) {
-      document.getElementById('mensagemCheckin').textContent = "Erro: dados insuficientes!";
-      return;
-    }
-    document.getElementById('btnCheckin').disabled = true;
-    const { error } = await supabase.from('checkins').insert([{
-      aluno_id: alunoId,
-      academia_id: treinoAtivo.academia_id,
-      data_checkin: new Date().toISOString()
-    }]);
-    if (!error) {
-      document.getElementById('mensagemCheckin').textContent = "✅ Check-in registrado!";
-    } else {
-      document.getElementById('mensagemCheckin').textContent = "Erro no check-in!";
-      document.getElementById('btnCheckin').disabled = false;
-    }
-  });
-
-  window.toggleVideo = function(exId, btn) {
-    const box = document.getElementById(`videoBox_${exId}`);
-    const iframe = box.querySelector('iframe');
-    const video_url = btn.getAttribute('data-url');
-    if (box.classList.contains('collapse')) {
-      iframe.src = video_url;
-      box.classList.remove('collapse');
-    } else {
-      iframe.src = '';
-      box.classList.add('collapse');
-    }
-  };
+  if (!alunoId || !treinoAtivo?.academia_id) {
+    document.getElementById('mensagemCheckin').textContent = "Erro: dados insuficientes!";
+    return;
+  }
   
-  window.toggleTreino = function(letra) {
+  // Verifica se já fez check-in hoje
+  const inicioHoje = new Date();
+  inicioHoje.setHours(0,0,0,0);
+  const fimHoje = new Date();
+  fimHoje.setHours(23,59,59,999);
+
+  const { data: checkinsHoje } = await supabase
+    .from('checkins')
+    .select('*')
+    .eq('aluno_id', alunoId)
+    .eq('academia_id', treinoAtivo.academia_id)
+    .gte('data_checkin', inicioHoje.toISOString())
+    .lte('data_checkin', fimHoje.toISOString());
+
+  if (checkinsHoje && checkinsHoje.length > 0) {
+    document.getElementById('mensagemCheckin').textContent = "Você já fez check-in hoje!";
+    return;
+  }
+
+  document.getElementById('btnCheckin').disabled = true;
+  const { error } = await supabase.from('checkins').insert([{
+    aluno_id: alunoId,
+    academia_id: treinoAtivo.academia_id,
+    data_checkin: new Date().toISOString()
+  }]);
+  
+  if (!error) {
+    document.getElementById('mensagemCheckin').textContent = "✅ Check-in registrado!";
+  } else {
+    document.getElementById('mensagemCheckin').textContent = "Erro no check-in!";
+    document.getElementById('btnCheckin').disabled = false;
+  }
+});
+
+window.toggleVideo = function(exId, videoUrl) {
+  const videoBox = document.getElementById(`videoBox_${exId}`);
+  const iframe = document.getElementById(`iframe_${exId}`);
+  
+  if (videoBox.style.maxHeight === '0px' || !videoBox.style.maxHeight) {
+    // Abre o vídeo
+    iframe.src = videoUrl;
+    videoBox.style.maxHeight = '400px';
+  } else {
+    // Fecha o vídeo
+    iframe.src = '';
+    videoBox.style.maxHeight = '0px';
+  }
+};
+
+window.toggleTreino = function(letra) {
   treinoExpandido[letra] = !treinoExpandido[letra];
   renderizarExercicios();
 };
+
 window.toggleExercicio = function(id) {
   exercicioExpandido[id] = !exercicioExpandido[id];
   renderizarExercicios();
@@ -294,20 +325,19 @@ window.marcarRep = function(exId, i) {
   renderizarExercicios();
 };
 
-  window.desmarcarTodos = function() {
-    Object.keys(estadoCheckboxes).forEach(k => estadoCheckboxes[k]=false);
-    salvarEstadoCheckboxes();
-    renderizarExercicios();
-  };
+window.desmarcarTodos = function() {
+  Object.keys(estadoCheckboxes).forEach(k => estadoCheckboxes[k]=false);
+  salvarEstadoCheckboxes();
+  renderizarExercicios();
+};
 
 setTimeout(() => {
   const btn = document.querySelector('.btn-warning[onclick*="desmarcarTodos"]');
   if (btn) {
     btn.addEventListener('touchstart', function(e) {
-      e.preventDefault(); // evita clique fantasma
+      e.preventDefault();
       window.desmarcarTodos();
     });
-    // (opcional redundância) também reforça o click
     btn.addEventListener('click', function(e) {
       window.desmarcarTodos();
     });
