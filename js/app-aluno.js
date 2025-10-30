@@ -94,11 +94,21 @@ async function renderizarExercicios() {
     let html = `<button type="button" class="btn btn-warning w-100 mb-4 fw-bold rounded-3 shadow-sm" style="font-size:1.12rem;" onclick="desmarcarTodos()">Desmarcar todos</button>`;
     html += await Promise.all(Object.entries(grupos).map(async ([letra, lista]) => {
       const treinoOpen = treinoExpandido[letra] ?? true;
+      
+      const todosExerciciosConcluidos = lista.every(ex => {
+        let repsArr = Array.isArray(ex.repeticoes)
+          ? ex.repeticoes
+          : String(ex.repeticoes).replace(/"/g,"").replace(/[\[\]]/g,"").split(',').map(a=>a.trim()).filter(Boolean);
+        const checkIds = repsArr.map((_,i) => `${ex.id}_rep${i}`);
+        return checkIds.every(id => estadoCheckboxes[id] === true);
+      });
+
       return `
       <div class="mb-4">
         <div onclick="toggleTreino('${letra}')" style="cursor:pointer;background:#f8f9fa;border-radius:12px;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.6em;">
           <h5 class="fw-semibold m-0" style="font-size:1.2rem;">Treino ${letra}</h5>
-          <span class="ms-auto"><i class="bi ${treinoOpen ? 'bi-chevron-down' : 'bi-chevron-right'}"></i></span>
+          ${todosExerciciosConcluidos ? '<span style="font-size:1.5rem;margin-left:auto;margin-right:0.5rem;">✅</span>' : ''}
+          <span class="${todosExerciciosConcluidos ? '' : 'ms-auto'}"><i class="bi ${treinoOpen ? 'bi-chevron-down' : 'bi-chevron-right'}"></i></span>
         </div>
         <div class="${treinoOpen ? '' : 'd-none'}">
         ${await Promise.all(lista.map(async (ex) => {
@@ -223,7 +233,6 @@ async function getNomeGrupoTipoExercicio(e) {
   return ['-', '-', null];
 }
 
-// Inicialização
 window.addEventListener('DOMContentLoaded', async () => {
   getAlunoIdFromUrl();
   await carregarAluno();
@@ -318,8 +327,16 @@ window.toggleExercicio = function(id) {
 
 window.marcarRep = function(exId, i) {
   const cbId = `${exId}_rep${i}`;
+  const eraFalso = !estadoCheckboxes[cbId];
   estadoCheckboxes[cbId] = !estadoCheckboxes[cbId];
   salvarEstadoCheckboxes();
+  
+  if (eraFalso && estadoCheckboxes[cbId]) {
+    setTimeout(() => {
+      verificarTreinoCompleto();
+    }, 300);
+  }
+  
   renderizarExercicios();
 };
 
@@ -328,6 +345,47 @@ window.desmarcarTodos = function() {
   salvarEstadoCheckboxes();
   renderizarExercicios();
 };
+
+function verificarTreinoCompleto() {
+  const grupos = {};
+  for (const t of treinoExercicios) {
+    if (!grupos[t.treino_letra]) grupos[t.treino_letra] = [];
+    grupos[t.treino_letra].push(t);
+  }
+  
+  for (const [letra, lista] of Object.entries(grupos)) {
+    const todosExerciciosConcluidos = lista.every(ex => {
+      let repsArr = Array.isArray(ex.repeticoes)
+        ? ex.repeticoes
+        : String(ex.repeticoes).replace(/"/g,"").replace(/[\[\]]/g,"").split(',').map(a=>a.trim()).filter(Boolean);
+      const checkIds = repsArr.map((_,i) => `${ex.id}_rep${i}`);
+      return checkIds.every(id => estadoCheckboxes[id] === true);
+    });
+    
+    const jaParabenizou = localStorage.getItem(`parabenizado_${treinoAtivo.id}_${letra}`);
+    if (todosExerciciosConcluidos && !jaParabenizou) {
+      mostrarParabens(letra);
+      localStorage.setItem(`parabenizado_${treinoAtivo.id}_${letra}`, 'true');
+    }
+  }
+}
+
+function mostrarParabens(letra) {
+  const toast = document.createElement('div');
+  toast.className = 'toast-parabens';
+  toast.innerHTML = `
+    <div style="background:#54D972;color:#fff;padding:1.2rem 1.5rem;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.2);text-align:center;font-size:1.1rem;font-weight:600;">
+      🎉 Parabéns! Treino ${letra} concluído! 🎉
+    </div>
+  `;
+  toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;animation:slideDown 0.5s ease;';
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideUp 0.5s ease';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
 
 setTimeout(() => {
   const btn = document.querySelector('.btn-warning[onclick*="desmarcarTodos"]');
