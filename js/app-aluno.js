@@ -102,42 +102,35 @@ async function renderizarExercicios() {
         </div>
         <div class="${treinoOpen ? '' : 'd-none'}">
         ${await Promise.all(lista.map(async (ex) => {
-  const [nome, grupo, video_url] = await getNomeGrupoTipoExercicio(ex);
-  let repsArr = Array.isArray(ex.repeticoes)
-    ? ex.repeticoes
-    : String(ex.repeticoes).replace(/"/g,"").replace(/[\[\]]/g,"").split(',').map(a=>a.trim()).filter(Boolean);
-  const checkIds = repsArr.map((_,i) => `${ex.id}_rep${i}`);
-  const checks = checkIds.map(id => estadoCheckboxes[id] ? true : false);
+          const [nome, grupo, video_url] = await getNomeGrupoTipoExercicio(ex);
+          let repsArr = Array.isArray(ex.repeticoes)
+            ? ex.repeticoes
+            : String(ex.repeticoes).replace(/"/g,"").replace(/[\[\]]/g,"").split(',').map(a=>a.trim()).filter(Boolean);
+          const checkIds = repsArr.map((_,i) => `${ex.id}_rep${i}`);
+          const checks = checkIds.map(id => estadoCheckboxes[id] ? true : false);
+          const todasConcluidas = checks.every(c => c === true);
 
-  // ✅ ADICIONE ESTA LINHA AQUI:
-  const todasConcluidas = checks.every(c => c === true);
+          const exercOpen = exercicioExpandido[ex.id] ?? false;
 
-  const exercOpen = exercicioExpandido[ex.id] ?? false;
-
-  return `
-    <div class="card shadow-sm mb-2 border-0" style="border-radius:20px;">
-      <div onclick="toggleExercicio('${ex.id}')" style="cursor:pointer;padding:18px 18px 7px 18px;border-radius:18px;background:#FFF;display:flex;align-items:center;gap:.6em;">
-        
-        <!-- ✅ ADICIONE A CLASSE AQUI: -->
-        <span class="fw-bold ${todasConcluidas ? 'exercicio-completo' : ''}" style="font-size:1.1rem;">${nome}</span>
-        
-        <!-- ✅ E AQUI TAMBÉM: -->
-        <span class="ms-2 ${todasConcluidas ? 'exercicio-completo' : ''}" style="color:#888;font-weight:400;">
-          | ${grupo} | Séries: ${repsArr.length}
-        </span>
-        
-        ${video_url ? `
-          <button class="btn btn-link p-0 ms-2" onclick="event.stopPropagation(); toggleVideo('${ex.id}', '${video_url}');" style="text-decoration:none;">
-            <svg width="24" height="24" fill="#FF6B6B" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" fill="#FF6B6B"/>
-              <path d="M10 8l6 4-6 4V8z" fill="#FFF"/>
-            </svg>
-          </button>
-        ` : ''}
-        <span style="font-weight:300;font-size:1.2em;margin-left:auto;">
-          <i class="bi ${exercOpen ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
-        </span>
-      </div>
+          return `
+            <div class="card shadow-sm mb-2 border-0" style="border-radius:20px;">
+              <div onclick="toggleExercicio('${ex.id}')" style="cursor:pointer;padding:18px 18px 7px 18px;border-radius:18px;background:#FFF;display:flex;align-items:center;gap:.6em;">
+                <span class="fw-bold ${todasConcluidas ? 'exercicio-completo' : ''}" style="font-size:1.1rem;">${nome}</span>
+                <span class="ms-2 ${todasConcluidas ? 'exercicio-completo' : ''}" style="color:#888;font-weight:400;">
+                  | ${grupo} | Séries: ${repsArr.length}
+                </span>
+                ${video_url ? `
+                  <button class="btn btn-link p-0 ms-2" onclick="event.stopPropagation(); toggleVideo('${ex.id}', '${video_url}');" style="text-decoration:none;">
+                    <svg width="24" height="24" fill="#FF6B6B" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" fill="#FF6B6B"/>
+                      <path d="M10 8l6 4-6 4V8z" fill="#FFF"/>
+                    </svg>
+                  </button>
+                ` : ''}
+                <span style="font-weight:300;font-size:1.2em;margin-left:auto;">
+                  <i class="bi ${exercOpen ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                </span>
+              </div>
               
               ${video_url ? `
                 <div id="videoBox_${ex.id}" class="video-container" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
@@ -267,7 +260,6 @@ document.getElementById('btnCheckin').addEventListener('click', async function()
     return;
   }
   
-  // Verifica se já fez check-in hoje
   const inicioHoje = new Date();
   inicioHoje.setHours(0,0,0,0);
   const fimHoje = new Date();
@@ -306,11 +298,9 @@ window.toggleVideo = function(exId, videoUrl) {
   const iframe = document.getElementById(`iframe_${exId}`);
   
   if (videoBox.style.maxHeight === '0px' || !videoBox.style.maxHeight) {
-    // Abre o vídeo
     iframe.src = videoUrl;
     videoBox.style.maxHeight = '400px';
   } else {
-    // Fecha o vídeo
     iframe.src = '';
     videoBox.style.maxHeight = '0px';
   }
