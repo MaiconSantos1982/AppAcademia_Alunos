@@ -193,13 +193,27 @@ async function renderizarExercicios() {
 
 async function getNomeGrupoTipoExercicio(e) {
   if (e.exercicio_tipo === 'geral') {
-    const { data } = await supabase.from('exercicios_geral').select('nome,grupo_muscular').eq('id', e.exercicio_id).single();
-    return [data?.nome || '-', data?.grupo_muscular || '-'];
+    const { data, error } = await supabase
+      .from('exercicios_geral')
+      .select('nome,grupo_muscular,video_url')
+      .eq('id', e.exercicio_id)
+      .single();
+    
+    if (error) console.error('Erro ao buscar exercício geral:', error);
+    return [data?.nome || '-', data?.grupo_muscular || '-', data?.video_url || null];
+    
   } else if (e.exercicio_tipo === 'academia') {
-    const { data } = await supabase.from('exercicios_academia').select('nome,grupo_muscular').eq('id', e.exercicio_id).single();
-    return [data?.nome || '-', data?.grupo_muscular || '-'];
+    const { data, error } = await supabase
+      .from('exercicios_academia')
+      .select('nome,grupo_muscular,video_url')
+      .eq('id', e.exercicio_id)
+      .single();
+    
+    if (error) console.error('Erro ao buscar exercício academia:', error);
+    return [data?.nome || '-', data?.grupo_muscular || '-', data?.video_url || null];
   }
-  return ['-', '-'];
+  
+  return ['-', '-', null];
 }
 
 // Inicialização
