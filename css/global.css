@@ -141,6 +141,11 @@ th.text-center, td.text-center {
   z-index: 2;
 }
 
+.exercicio-completo {
+  color: #aaa !important;
+  text-decoration: line-through;
+}
+
 /* Botão concluir */
 .btn-concluir {
   background: #FFD85E;
