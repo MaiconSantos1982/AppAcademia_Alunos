@@ -1,11 +1,11 @@
 {
-    "name": "App Aluno",
+    "name": "Ficha de treino",
     "short_name": "Aluno",
     "description": "Ficha de treino virtual para alunos",
     "lang": "pt-BR",
     "dir": "ltr",
   
-    "start_url": "./index.html",
+    "start_url": "./app-aluno.html",
     "scope": "./",
     "display": "standalone",
     "orientation": "portrait-primary",
