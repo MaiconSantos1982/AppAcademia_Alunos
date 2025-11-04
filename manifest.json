@@ -1,0 +1,53 @@
+{
+    "name": "App Aluno",
+    "short_name": "Aluno",
+    "description": "Ficha de treino virtual para alunos",
+    "lang": "pt-BR",
+    "dir": "ltr",
+  
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+  
+    "theme_color": "#0A84FF",
+    "background_color": "#0A84FF",
+  
+    "icons": [
+      {
+        "src": "./icons/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "./icons/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ],
+  
+    "shortcuts": [
+      {
+        "name": "Treino",
+        "short_name": "Treino",
+        "url": "./aluno-treino.html",
+        "icons": [
+          { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" }
+        ]
+      },
+      {
+        "name": "Alunos",
+        "short_name": "Alunos",
+        "url": "./alunos.html",
+        "icons": [
+          { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" }
+        ]
+      }
+    ],
+  
+    "categories": ["fitness", "health", "productivity"],
+    "prefer_related_applications": false
+  }
+  
