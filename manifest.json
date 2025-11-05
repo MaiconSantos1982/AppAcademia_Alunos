@@ -5,7 +5,7 @@
     "lang": "pt-BR",
     "dir": "ltr",
   
-    "start_url": "./app-aluno.html",
+    "start_url": "./app-aluno.html?id=c5d0eb3d-9327-4cac-acc0-4c74ebdac7d6",
     "scope": "./",
     "display": "standalone",
     "orientation": "portrait-primary",
