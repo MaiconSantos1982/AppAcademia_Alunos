@@ -8,7 +8,11 @@ let exercicioExpandido = {};
 
 function getAlunoIdFromUrl() {
   const p = new URLSearchParams(location.search);
-  alunoId = p.get('id');
+  alunoId = p.get('id') || localStorage.getItem('alunoId');
+  if (!alunoId) {
+    // Redireciona para login se necessário
+    location.href = './index.html';
+  }
 }
 
 async function carregarAluno() {
